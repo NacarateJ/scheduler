@@ -11,10 +11,12 @@ import DayList from "components/DayList";
 import InterviewerListItem from "components/InterviewerListItem";
 import InterviewerList from "components/InterviewerList";
 import Appointment from "components/Appointment";
+import Header from "components/Appointment/Header";
+import Empty from "components/Appointment/Empty";
 
 
 //////////////////////////////////////////////////////////
-/// Button component
+/// Button Component Stories
 //////////////////////////////////////////////////////////
 
 storiesOf("Button", module)
@@ -34,7 +36,7 @@ storiesOf("Button", module)
   ));
   
 //////////////////////////////////////////////////////////
-/// DayListItem component
+/// DayListItem Component Stories
 //////////////////////////////////////////////////////////
 
 storiesOf("DayListItem", module)
@@ -49,7 +51,7 @@ storiesOf("DayListItem", module)
   ));
   
 //////////////////////////////////////////////////////////
-/// DayList component
+/// DayList Component Stories
 //////////////////////////////////////////////////////////
 
 const days = [
@@ -85,7 +87,7 @@ storiesOf("DayList", module)
   ));
 
 //////////////////////////////////////////////////////////
-/// InterviewerListItem component
+/// InterviewerListItem Component Stories
 //////////////////////////////////////////////////////////
 
 const interviewer = {
@@ -121,7 +123,7 @@ storiesOf("InterviewerListItem", module)
   ));
 
 //////////////////////////////////////////////////////////
-/// InterviewerList component
+/// InterviewerList Component Stories
 //////////////////////////////////////////////////////////
 
 const interviewers = [
@@ -148,7 +150,7 @@ storiesOf("InterviewerList", module)
   ));
 
 //////////////////////////////////////////////////////////
-/// Appointment component
+/// Appointment Component Stories
 //////////////////////////////////////////////////////////
 
 storiesOf("Appointment", module)
@@ -156,4 +158,7 @@ storiesOf("Appointment", module)
     backgrounds: [{ name: "white", value: "#fff", default: true }],
   })
   .add("Appointment", () => <Appointment />)
-  .add("Appointment with Time", () => <Appointment time="12pm" />);
+  .add("Appointment with Time", () => <Appointment time="12pm" />)
+  .add("Header", () => <Header time="12pm" />)
+  .add("Empty", () => <Empty onAdd={action("onAdd")} />);
+
