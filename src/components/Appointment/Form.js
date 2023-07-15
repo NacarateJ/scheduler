@@ -1,36 +1,59 @@
-import React from "react";
+import React, {useState} from "react";
 
 import InterviewerList from "components/InterviewerList";
 import Button from "components/Button";
 
-export default function Form({student, interviewers, interviewer, onSave, onCancel}) {
+
+
+export default function Form({interviewers, onSave, onCancel}) {
+  const [student, setStudent] = useState(student || "");
+  const [interviewer, setInterviewer] = useState(interviewer || null);
+
+  const reset = () => {
+    setStudent("");
+    setInterviewer(null);
+  }
+
+  const cancel = () => {
+    reset();
+    onCancel();
+  }
+
+   const handleStudentChange = (event) => {
+     setStudent(event.target.value);
+   };
+
+   const handleInterviewerChange = (selectedInterviewer) => {
+     setInterviewer(selectedInterviewer);
+   };
+
   return (
     <main className="appointment__card appointment__card--create">
       <section className="appointment__card-left">
-        <form autoComplete="off">
+        <form autoComplete="off" onSubmit={event => event.preventDefault()}>
           <input
             className="appointment__create-input text--semi-bold"
             name="name"
             type="text"
-            // value={#}
-            // onChange={#}
             placeholder="Enter Student Name"
-            /*
-              This must be a controlled component
-              your code goes here
-            */
+            value={student}
+            onChange={handleStudentChange}
           />
         </form>
-        <InterviewerList 
-          /* your code goes here */
+        <InterviewerList
           interviewers={interviewers}
-          interviewer={interviewer}
+          value={interviewer}
+          onChange={handleInterviewerChange}
         />
       </section>
       <section className="appointment__card-right">
         <section className="appointment__actions">
-          <Button danger onClick={onCancel}>Cancel</Button>
-          <Button confirm onClick={onSave}>Save</Button>
+          <Button danger onClick={cancel}>
+            Cancel
+          </Button>
+          <Button confirm onClick={onSave}>
+            Save
+          </Button>
         </section>
       </section>
     </main>
