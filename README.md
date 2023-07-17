@@ -45,3 +45,24 @@ npm test
 ```sh
 npm run storybook
 ```
+
+## The API Server
+
+The API Srver for this project was provided by [LHL](https://www.lighthouselabs.ca/) and can be found [here](https://github.com/lighthouse-labs/scheduler-api).
+
+### Setup
+
+Fork and clone the [scheduler-api](https://github.com/lighthouse-labs/scheduler-api) into a new directory (***NOT*** within the `scheduler` directory).
+
+Follow the `README.md` instructions. This will involve a few steps, including:
+
+* installing dependencies
+* creating the database
+* creating a `.env.development` file in the root directory
+* seeding the database
+* running the server
+
+### Running Both Servers
+
+The scheduler client (`scheduler`) runs on port 8000, and the scheduler server (`scheduler-api`) runs on port 8001.
+
