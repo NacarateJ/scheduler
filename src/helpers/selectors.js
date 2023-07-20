@@ -6,9 +6,9 @@ export function getAppointmentsForDay(state, day) {
     return [];
   }
 
-  // Retrieve the appointments array,
-  // the map method will create a new array containing the appointment objects
+  // Retrieve the appointments array
   return selectedDay.appointments.map((appointmentId) => {
+    // The map method will create a new array containing the appointment objects for that day
     return state.appointments[appointmentId];
   });
 };
