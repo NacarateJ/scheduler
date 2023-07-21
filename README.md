@@ -48,7 +48,7 @@ npm run storybook
 
 ## The API Server
 
-The API Srver for this project was provided by [LHL](https://www.lighthouselabs.ca/) and can be found [here](https://github.com/lighthouse-labs/scheduler-api).
+The API Server for this project was provided by [LHL](https://www.lighthouselabs.ca/) and can be found [here](https://github.com/lighthouse-labs/scheduler-api).
 
 ### Setup
 
