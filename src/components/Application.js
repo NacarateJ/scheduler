@@ -34,7 +34,7 @@ export default function Application() {
         ...prev,
         days: daysResponse.data,
         appointments: appointmentsResponse.data,
-        interviewers: interviewersResponse,
+        interviewers: interviewersResponse.data,
       }));
 
       // console.log("all", all);
@@ -51,6 +51,8 @@ export default function Application() {
   const schedule = appointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
 
+    // console.log("interview", interview);
+
     return (
       <Appointment
         key={appointment.id}
@@ -61,7 +63,8 @@ export default function Application() {
     );
   });
 
-  console.log("schedule ", schedule);
+  // console.log("appointments", appointments);
+  // console.log("schedule", schedule);
 
   return (
     <main className="layout">
