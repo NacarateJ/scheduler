@@ -1,4 +1,4 @@
-export function getAppointmentsForDay(state, day) {
+export default function getAppointmentsForDay(state, day) {
   // Find the object in the state.days arr that matches day name
   const selectedDay = state.days.find((d) => d.name === day);
 
