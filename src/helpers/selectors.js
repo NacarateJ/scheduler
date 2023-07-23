@@ -46,3 +46,22 @@ export function getInterview(state, interview) {
   // Return null if no interview is booked, interviewer data is missing, or the interview itself is null
   return null;
 }
+
+/////////////////////////////////////////////////////////////////////////////////
+/// getInterviewersForDay 
+/////////////////////////////////////////////////////////////////////////////////
+
+export function getInterviewersForDay(state, day) {
+  // Find the object in the state.days arr that matches day name
+  const selectedDay = state.days.find((d) => d.name === day);
+
+  if (!selectedDay || selectedDay.interviewers.length === 0) {
+    return [];
+  }
+
+  // Retrieve the interviewers array
+  return selectedDay.interviewers.map((interviewerId) => {
+    // The map method will create a new array containing the interviewers objects for that day
+    return state.interviewers[interviewerId];
+  });
+}
