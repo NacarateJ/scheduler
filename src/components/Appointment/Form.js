@@ -5,9 +5,9 @@ import Button from "components/Button";
 
 
 
-export default function Form({interviewers, onSave, onCancel}) {
-  const [student, setStudent] = useState(student || "");
-  const [interviewer, setInterviewer] = useState(interviewer || null);
+export default function Form({interviewers,interviewerID, studentName, onSave, onCancel}) {
+  const [student, setStudent] = useState(studentName || "");
+  const [interviewer, setInterviewer] = useState(interviewerID || null);
 
   const reset = () => {
     setStudent("");
