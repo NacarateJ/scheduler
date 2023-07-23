@@ -5,27 +5,27 @@ import Button from "components/Button";
 
 
 
-export default function Form({interviewers,interviewerID, studentName, onSave, onCancel}) {
+export default function Form({ interviewers, interviewerID, studentName, onSave, onCancel }) {
   const [student, setStudent] = useState(studentName || "");
   const [interviewer, setInterviewer] = useState(interviewerID || null);
 
   const reset = () => {
     setStudent("");
     setInterviewer(null);
-  }
+  };
 
   const cancel = () => {
     reset();
     onCancel();
-  }
+  };
 
-   const handleStudentChange = (event) => {
-     setStudent(event.target.value);
-   };
+  const handleStudentChange = (event) => {
+    setStudent(event.target.value);
+  };
 
-   const handleInterviewerChange = (selectedInterviewer) => {
-     setInterviewer(selectedInterviewer);
-   };
+  const handleInterviewerChange = (selectedInterviewer) => {
+    setInterviewer(selectedInterviewer);
+  };
 
   return (
     <main className="appointment__card appointment__card--create">
