@@ -6,17 +6,31 @@ import Header from "./Header";
 import Show from "./Show";
 import Empty from "./Empty";
 import Form from "./Form";
-
+import Status from "./Status";
 
 import useVisualMode from "hooks/useVisualMode";
 
 
-export default function Appointment({ time, interview, interviewers }) {
+export default function Appointment({ id, time, interview, interviewers, bookInterview }) {
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
   const CREATE = "CREATE";
+  const SAVING = "SAVING";
 
   const { mode, transition, back } = useVisualMode(interview ? SHOW : EMPTY);
+
+  const save = async (name, interviewer) => {
+    const interview = {
+      student: name,
+      interviewer,
+    };
+
+    transition(SAVING);
+
+    await bookInterview(id, interview);
+
+    transition(SHOW);
+  };
 
   return (
     <article className="appointment">
@@ -31,12 +45,11 @@ export default function Appointment({ time, interview, interviewers }) {
       {mode === CREATE && (
         <Form
           interviewers={interviewers}
-          onSave={(student, interviewer) => {
-            // To do
-          }}
-          onCancel={() => back()}
+          onSave={save}
+          onCancel={back}
         />
       )}
+      {mode === SAVING && <Status/>}
     </article>
   );
 };
