@@ -40,11 +40,6 @@ export default function Application() {
         appointments: appointmentsResponse.data,
         interviewers: interviewersResponse.data,
       }));
-
-      // console.log("all", all);
-      // console.log("daysResponse", daysResponse.data);
-      // console.log("appointmentsResponse", appointmentsResponse.data);
-      // console.log("interviewersResponse", interviewersResponse.data);
     });
   }, []);
 
@@ -53,6 +48,27 @@ export default function Application() {
 
   // Get interviewers for the currently selected day
   const interviewers = getInterviewersForDay(state, state.day);
+
+  // Book interview
+  const bookInterview = async (id, interview) => {
+    try {
+      await axios.put(`/api/appointments/${id}`, { interview });
+    
+      const appointment = {
+        ...state.appointments[id],
+        interview: {...interview}
+      };
+
+      const appointments = {
+        ...state.appointments,
+        [id]: appointment
+      }
+
+      setState({...state, appointments});
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
   // Create the schedule by mapping each appointment to its corresponding interview
   const schedule = appointments.map((appointment) => {
@@ -66,6 +82,7 @@ export default function Application() {
         time={appointment.time}
         interview={interview}
         interviewers={interviewers}
+        bookInterview={bookInterview}
       />
     );
   });
