@@ -7,19 +7,35 @@ import Show from "./Show";
 import Empty from "./Empty";
 import Form from "./Form";
 import Status from "./Status";
+import Confirm from "./Confirm";
 
 import useVisualMode from "hooks/useVisualMode";
 
 
-export default function Appointment({ id, time, interview, interviewers, bookInterview }) {
+export default function Appointment({
+  id,
+  time,
+  interview,
+  interviewers,
+  bookInterview,
+  cancelInterview,
+}) {
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
   const CREATE = "CREATE";
   const SAVING = "SAVING";
+  const DELETING = "DELETING";
+  const CONFIRMING = "CONFIRMING";
 
   const { mode, transition, back } = useVisualMode(interview ? SHOW : EMPTY);
 
   const save = async (name, interviewer) => {
+    // Check if both name and interviewer are provided
+    if (!name || !interviewer) {
+      alert("Please enter your name and select an interviewer.");
+      return;
+    }
+
     const interview = {
       student: name,
       interviewer,
@@ -32,6 +48,18 @@ export default function Appointment({ id, time, interview, interviewers, bookInt
     transition(SHOW);
   };
 
+  const onDelete = async () => {
+    transition(DELETING);
+
+    try {
+      await cancelInterview(id);
+      transition(EMPTY)
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
   return (
     <article className="appointment">
       <Header time={time} />
@@ -40,16 +68,21 @@ export default function Appointment({ id, time, interview, interviewers, bookInt
         <Show
           student={interview.student}
           interviewer={interview.interviewer}
+          onDelete={() => transition(CONFIRMING)}
         />
       )}
       {mode === CREATE && (
-        <Form
-          interviewers={interviewers}
-          onSave={save}
+        <Form interviewers={interviewers} onSave={save} onCancel={back} />
+      )}
+      {mode === SAVING && <Status message="Saving" />}
+      {mode === CONFIRMING && (
+        <Confirm
+          message="Are you sure you'd like to delete this appointment?"
+          onConfirm={onDelete}
           onCancel={back}
         />
       )}
-      {mode === SAVING && <Status/>}
+      {mode === DELETING && <Status message="Deleting" />}
     </article>
   );
 };
