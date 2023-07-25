@@ -52,28 +52,58 @@ export default function Application() {
   // Book interview
   const bookInterview = async (id, interview) => {
     try {
+      // Make PUT request
       await axios.put(`/api/appointments/${id}`, { interview });
-    
+
+      // Update the state with the new interview data
       const appointment = {
         ...state.appointments[id],
-        interview: {...interview}
+        interview: { ...interview },
       };
 
+      // Create new appointments objct that includes the updated
+      // appointment object and set it as the new appointments state
       const appointments = {
         ...state.appointments,
-        [id]: appointment
-      }
+        [id]: appointment,
+      };
 
-      setState({...state, appointments});
+      // Update state with new appointments
+      setState({ ...state, appointments });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
+
+  // Delete interview
+   const cancelInterview = async (id) => {
+     try {
+       // Send a DELETE request to the server to remove the interview data
+       await axios.delete(`/api/appointments/${id}`);
+
+       // Update the local state to set the interview data to null
+       const appointment = {
+         ...state.appointments[id],
+         interview: null,
+       };
+
+       // Create new appointments objct that includes the updated
+       // appointment object and set it as the new appointments state
+       const appointments = {
+         ...state.appointments,
+         [id]: appointment,
+       };
+
+       // Update state with new appointments
+       setState({ ...state, appointments });
+     } catch (error) {
+       console.log(error);
+     }
+   };
 
   // Create the schedule by mapping each appointment to its corresponding interview
   const schedule = appointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
-
 
     return (
       <Appointment
@@ -83,12 +113,10 @@ export default function Application() {
         interview={interview}
         interviewers={interviewers}
         bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
       />
     );
   });
-
-  // console.log("appointments", appointments);
-  // console.log("schedule", schedule);
 
   return (
     <main className="layout">
