@@ -114,6 +114,7 @@ export default function Application() {
         interviewers={interviewers}
         bookInterview={bookInterview}
         cancelInterview={cancelInterview}
+        studentName={interview !== null && interview.student}
       />
     );
   });
