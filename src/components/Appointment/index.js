@@ -8,6 +8,7 @@ import Empty from "./Empty";
 import Form from "./Form";
 import Status from "./Status";
 import Confirm from "./Confirm";
+import Error from "./Error";
 
 import useVisualMode from "hooks/useVisualMode";
 
@@ -28,6 +29,8 @@ export default function Appointment({
   const DELETE = "DELETE";
   const CONFIRM = "CONFIRM";
   const EDIT = "EDIT";
+  const ERROR_SAVE = "ERROR_SAVE";
+  const ERROR_DELETE = "ERROR_DELETE";
 
   const { mode, transition, back } = useVisualMode(interview ? SHOW : EMPTY);
 
@@ -45,22 +48,24 @@ export default function Appointment({
 
     transition(SAVE);
 
-    try {
-      await bookInterview(id, interview);
+    const result = await bookInterview(id, interview);
+    
+    if (result) {
       transition(SHOW);
-    } catch (error) {
-      console.log(error);
+    } else {
+      transition(ERROR_SAVE, true);
     }
   };
 
   const onDelete = async () => {
-    transition(DELETE);
+    transition(DELETE, true);
 
-    try {
-      await cancelInterview(id);
+    const result = await cancelInterview(id);
+
+    if (result) {
       transition(EMPTY);
-    } catch (error) {
-      console.log(error);
+    } else {
+      transition(ERROR_DELETE, true);
     }
   };
 
@@ -86,6 +91,12 @@ export default function Appointment({
           onSave={onSave}
           onCancel={back}
         />
+      )}
+      {mode === ERROR_SAVE && (
+        <Error message="Could not save the appointment." onClose={back} />
+      )}
+      {mode === ERROR_DELETE && (
+        <Error message="Could not delete the appointment." onClose={back} />
       )}
       {mode === SAVE && <Status message="Saving" />}
       {mode === DELETE && <Status message="Deleting" />}
