@@ -79,20 +79,20 @@ export default function Appointment({
       {mode === CREATE && (
         <Form interviewers={interviewers} onSave={onSave} onCancel={back} />
       )}
-      {mode === SAVE && <Status message="Saving" />}
-      {mode === CONFIRM && (
-        <Confirm
-          message="Are you sure you'd like to delete this appointment?"
-          onConfirm={onDelete}
-          onCancel={back}
-        />
-      )}
-      {mode === DELETE && <Status message="Deleting" />}
       {mode === EDIT && (
         <Form
           interviewers={interviewers}
           studentName={studentName}
           onSave={onSave}
+          onCancel={back}
+        />
+      )}
+      {mode === SAVE && <Status message="Saving" />}
+      {mode === DELETE && <Status message="Deleting" />}
+      {mode === CONFIRM && (
+        <Confirm
+          message="Are you sure you'd like to delete this appointment?"
+          onConfirm={onDelete}
           onCancel={back}
         />
       )}
