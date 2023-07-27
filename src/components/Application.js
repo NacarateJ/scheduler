@@ -70,8 +70,13 @@ export default function Application() {
 
       // Update state with new appointments
       setState({ ...state, appointments });
+
+      return true;
+
     } catch (error) {
       console.log(error);
+
+      return false;
     }
   };
 
@@ -96,8 +101,13 @@ export default function Application() {
 
        // Update state with new appointments
        setState({ ...state, appointments });
+
+       return true;
+
      } catch (error) {
        console.log(error);
+
+       return false;
      }
    };
 
