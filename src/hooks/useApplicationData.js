@@ -32,6 +32,23 @@ export default function useApplicationData() {
     });
   }, []);
 
+  // Update the number of spots for each day
+  const updateSpots = (state) => {
+    const updatedDays = state.days.map((day) => {
+      const spots = day.appointments.reduce((count, appointmentId) => {
+        if (!state.appointments[appointmentId].interview) {
+          return count + 1;
+        }
+        return count;
+      }, 0);
+
+      return { ...day, spots };
+    });
+
+    // Update state
+    setState((prev) => ({ ...prev, days: updatedDays }));
+  };
+
   // Book interview
   const bookInterview = async (id, interview) => {
     try {
@@ -51,8 +68,14 @@ export default function useApplicationData() {
         [id]: appointment,
       };
 
+      // Save updated state in a variable so updateSpots have access to it
+      const newState = { ...state, appointments };
+
       // Update state with new appointments
-      setState({ ...state, appointments });
+      setState(newState);
+
+      // Update the number of spots 
+      updateSpots(newState);
 
       return true;
     } catch (error) {
@@ -81,8 +104,14 @@ export default function useApplicationData() {
         [id]: appointment,
       };
 
+      // Save updated state in a variable so updateSpots have access to it
+      const newState = { ...state, appointments };
+
       // Update state with new appointments
-      setState({ ...state, appointments });
+      setState(newState);
+
+      // Update the number of spots 
+      updateSpots(newState);
 
       return true;
     } catch (error) {
