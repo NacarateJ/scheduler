@@ -1,15 +1,54 @@
-import { useState, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import axios from "axios";
 
+const SET_DAY = "SET_DAY";
+const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
+const SET_INTERVIEW = "SET_INTERVIEW";
+
+// Updates the state based on dispatched actions
+function reducer(state, action) {
+  if (action.type === SET_DAY) {
+    return { ...state, day: action.day };
+  }
+
+  if (action.type === SET_APPLICATION_DATA) {
+    return {
+      ...state,
+      days: action.days,
+      appointments: action.appointments,
+      interviewers: action.interviewers,
+    };
+  }
+
+  if (action.type === SET_INTERVIEW) {
+    const interview = action.interview;
+
+    const appointment = state.appointments[action.id];
+
+    appointment.interview = interview;
+
+    const appointments = {...state.appointments, [action.id]: appointment};
+
+      return {
+        ...state,
+        appointments,
+      };
+  }
+
+  return new Error(
+    `Tried to reduce with unsupported action type: ${action.type}`
+  );
+}
+
 export default function useApplicationData() {
-  const [state, setState] = useState({
+  const [state, dispatch] = useReducer(reducer, {
     day: "Monday",
     days: [],
     appointments: {},
     interviewers: {},
   });
 
-  const setDay = (day) => setState({ ...state, day });
+  const setDay = (day) => dispatch({ type: SET_DAY, day });
 
   const daysAPI = "/api/days";
   const appointmentsAPI = "/api/appointments";
@@ -23,12 +62,12 @@ export default function useApplicationData() {
     ]).then((all) => {
       const [daysResponse, appointmentsResponse, interviewersResponse] = all;
 
-      setState((prev) => ({
-        ...prev,
+      dispatch( {
+        type: SET_APPLICATION_DATA,
         days: daysResponse.data,
         appointments: appointmentsResponse.data,
         interviewers: interviewersResponse.data,
-      }));
+      });
     });
   }, []);
 
@@ -45,8 +84,7 @@ export default function useApplicationData() {
       return { ...day, spots };
     });
 
-    // Update state
-    setState((prev) => ({ ...prev, days: updatedDays }));
+    return updatedDays;
   };
 
   // Book interview
@@ -72,10 +110,10 @@ export default function useApplicationData() {
       const newState = { ...state, appointments };
 
       // Update state with new appointments
-      setState(newState);
+      dispatch({ type: SET_INTERVIEW, id, interview });
 
       // Update the number of spots 
-      updateSpots(newState);
+      dispatch({type: SET_APPLICATION_DATA, days: updateSpots(newState), appointments, interviewers: newState.interviewers})
 
       return true;
     } catch (error) {
@@ -108,10 +146,16 @@ export default function useApplicationData() {
       const newState = { ...state, appointments };
 
       // Update state with new appointments
-      setState(newState);
+      dispatch({ type: SET_INTERVIEW, id, interview: null });
 
-      // Update the number of spots 
-      updateSpots(newState);
+      // Update the number of spots
+      dispatch({
+        type: SET_APPLICATION_DATA,
+        days: updateSpots(newState),
+        appointments,
+        interviewers: newState.interviewers,
+      });
+
 
       return true;
     } catch (error) {
