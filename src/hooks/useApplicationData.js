@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from "react";
+import { useReducer, useEffect, useRef } from "react";
 import axios from "axios";
 
 const SET_DAY = "SET_DAY";
@@ -51,10 +51,16 @@ export default function useApplicationData() {
   // Change selected day
   const setDay = (day) => dispatch({ type: SET_DAY, day });
 
+  // Ref to store the WebSocket instance
+  const webSocketRef = useRef(null);
+
   // Make a connection to the WebSocket server using the useEffect method
   useEffect(() => {
     // Establish the WebSocket connection
     const newSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+
+    // Store the WebSocket instance in the ref
+    webSocketRef.current = newSocket;
 
     // Set up event handlers for WebSocket interactions
     // Send message from client to server
@@ -68,7 +74,7 @@ export default function useApplicationData() {
     newSocket.onmessage = (event) => {
       // Handle WebSocket message here
       const data = JSON.parse(event.data);
-      
+
       console.log(`Message Received: ${data}`);
 
       if (data.type === "SET_INTERVIEW") {
@@ -94,11 +100,11 @@ export default function useApplicationData() {
       }
     };
 
-   return () => {
-     // Close the WebSocket connection when the component is unmounted
-     newSocket.close();
-     console.log("WebSocket connection closed.");
-   };
+    return () => {
+      // Close the WebSocket connection when the component is unmounted
+      newSocket.close();
+      console.log("WebSocket connection closed.");
+    };
   }, [state]);
 
   const daysAPI = "/api/days";
@@ -140,16 +146,9 @@ export default function useApplicationData() {
 
   // Book interview
   const bookInterview = async (id, interview) => {
-    // Create a cancel token source for the axios request
-    const cancelTokenSource = axios.CancelToken.source();
-
     try {
       // Make PUT request
-      await axios.put(
-        `/api/appointments/${id}`,
-        { interview },
-        { cancelToken: cancelTokenSource.token }
-      );
+      await axios.put(`/api/appointments/${id}`, { interview });
 
       // Update the state with the new interview data
       const appointment = {
@@ -188,14 +187,9 @@ export default function useApplicationData() {
 
   // Delete interview
   const cancelInterview = async (id) => {
-    // Create a cancel token source for the axios request
-    const cancelTokenSource = axios.CancelToken.source();
-
     try {
       // Send a DELETE request to the server to remove the interview data
-      await axios.delete(`/api/appointments/${id}`, {
-        cancelToken: cancelTokenSource.token,
-      });
+      await axios.delete(`/api/appointments/${id}`);
 
       // Update the local state to set the interview data to null
       const appointment = {
