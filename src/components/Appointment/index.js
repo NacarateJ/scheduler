@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 
 import "components/Appointment/styles.scss";
 
@@ -34,6 +34,16 @@ export default function Appointment({
 
   const { mode, transition, back } = useVisualMode(interview ? SHOW : EMPTY);
 
+  // Side effect to handle mode transition when interview prop changes
+ useEffect(() => {
+   if (interview && mode === EMPTY) {
+     transition(SHOW);
+   }
+   if (interview === null && mode === SHOW) {
+     transition(EMPTY);
+   }
+ }, [interview, transition, mode]);
+
   const onSave = async (name, interviewer) => {
     // Check if both name and interviewer are provided
     if (!name || !interviewer) {
@@ -49,7 +59,7 @@ export default function Appointment({
     transition(SAVE);
 
     const result = await bookInterview(id, interview);
-    
+
     if (result) {
       transition(SHOW);
     } else {
@@ -73,7 +83,7 @@ export default function Appointment({
     <article className="appointment">
       <Header time={time} />
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
-      {mode === SHOW && (
+      {mode === SHOW && interview && (
         <Show
           student={interview.student}
           interviewer={interview.interviewer}
