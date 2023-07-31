@@ -48,7 +48,58 @@ export default function useApplicationData() {
     interviewers: {},
   });
 
+  // Change selected day
   const setDay = (day) => dispatch({ type: SET_DAY, day });
+
+  // Make a connection to the WebSocket server using the useEffect method
+  useEffect(() => {
+    // Establish the WebSocket connection
+    const newSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+
+    // Set up event handlers for WebSocket interactions
+    // Send message from client to server
+    newSocket.onopen = () => {
+      newSocket.send("ping");
+
+      console.log("WebSocket connection established.");
+    };
+
+    // Send message from server to client
+    newSocket.onmessage = (event) => {
+      // Handle WebSocket message here
+      const data = JSON.parse(event.data);
+      
+      console.log(`Message Received: ${data}`);
+
+      if (data.type === "SET_INTERVIEW") {
+        // Update the state with the new interview data received from the server
+        const { id, interview } = data;
+
+        // Find the appointment with the given id
+        const updatedAppointments = {
+          ...state.appointments,
+          [id]: {
+            ...state.appointments[id],
+            interview: interview ? { ...interview } : null,
+          },
+        };
+
+        // Update the state with the updated appointment data
+        dispatch({
+          type: SET_APPLICATION_DATA,
+          days: updateSpots({ ...state, appointments: updatedAppointments }),
+          appointments: updatedAppointments,
+          interviewers: { ...state.interviewers },
+        });
+      }
+    };
+
+   return () => {
+     // Close the WebSocket connection when the component is unmounted
+     newSocket.close();
+     console.log("WebSocket connection closed.");
+   };
+  }, [state]);
 
   const daysAPI = "/api/days";
   const appointmentsAPI = "/api/appointments";
@@ -62,7 +113,7 @@ export default function useApplicationData() {
     ]).then((all) => {
       const [daysResponse, appointmentsResponse, interviewersResponse] = all;
 
-      dispatch( {
+      dispatch({
         type: SET_APPLICATION_DATA,
         days: daysResponse.data,
         appointments: appointmentsResponse.data,
@@ -89,9 +140,16 @@ export default function useApplicationData() {
 
   // Book interview
   const bookInterview = async (id, interview) => {
+    // Create a cancel token source for the axios request
+    const cancelTokenSource = axios.CancelToken.source();
+
     try {
       // Make PUT request
-      await axios.put(`/api/appointments/${id}`, { interview });
+      await axios.put(
+        `/api/appointments/${id}`,
+        { interview },
+        { cancelToken: cancelTokenSource.token }
+      );
 
       // Update the state with the new interview data
       const appointment = {
@@ -112,8 +170,13 @@ export default function useApplicationData() {
       // Update state with new appointments
       dispatch({ type: SET_INTERVIEW, id, interview });
 
-      // Update the number of spots 
-      dispatch({type: SET_APPLICATION_DATA, days: updateSpots(newState), appointments, interviewers: newState.interviewers})
+      // Update the number of spots
+      dispatch({
+        type: SET_APPLICATION_DATA,
+        days: updateSpots(newState),
+        appointments,
+        interviewers: newState.interviewers,
+      });
 
       return true;
     } catch (error) {
@@ -125,9 +188,14 @@ export default function useApplicationData() {
 
   // Delete interview
   const cancelInterview = async (id) => {
+    // Create a cancel token source for the axios request
+    const cancelTokenSource = axios.CancelToken.source();
+
     try {
       // Send a DELETE request to the server to remove the interview data
-      await axios.delete(`/api/appointments/${id}`);
+      await axios.delete(`/api/appointments/${id}`, {
+        cancelToken: cancelTokenSource.token,
+      });
 
       // Update the local state to set the interview data to null
       const appointment = {
@@ -156,7 +224,6 @@ export default function useApplicationData() {
         interviewers: newState.interviewers,
       });
 
-
       return true;
     } catch (error) {
       console.log(error);
@@ -171,4 +238,4 @@ export default function useApplicationData() {
     bookInterview,
     cancelInterview,
   };
-}
+};
