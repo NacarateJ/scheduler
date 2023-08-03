@@ -45,12 +45,6 @@ export default function Appointment({
  }, [interview, transition, mode]);
 
   const onSave = async (name, interviewer) => {
-    // Check if both name and interviewer are provided
-    if (!name || !interviewer) {
-      alert("Please enter your name and select an interviewer.");
-      return;
-    }
-
     const interview = {
       student: name,
       interviewer,
