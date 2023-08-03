@@ -39,6 +39,7 @@ export default function Form({ interviewers, interviewerID, studentName, onSave,
       return;
     }
 
+    setError("");
     onSave(student, interviewer);
   }
 
