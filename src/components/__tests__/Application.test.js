@@ -6,12 +6,14 @@ import Application from "components/Application";
 
 afterEach(cleanup);
 
-it("changes the schedule when a new day is selected", async () => {
-  const { getByText } = render(<Application />);
+describe("Appication", () => {
+  it("changes the schedule when a new day is selected", async () => {
+    const { getByText } = render(<Application />);
 
-  await waitForElement(() => getByText("Monday"));
+    await waitForElement(() => getByText("Monday"));
 
-  fireEvent.click(getByText("Tuesday"));
+    fireEvent.click(getByText("Tuesday"));
 
-  expect(getByText("Leopold Silvers")).toBeInTheDocument();
+    expect(getByText("Leopold Silvers")).toBeInTheDocument();
+  });
 });
