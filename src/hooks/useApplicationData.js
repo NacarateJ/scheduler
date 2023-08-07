@@ -114,29 +114,26 @@ export default function useApplicationData() {
   // Book interview
   const bookInterview = async (id, interview) => {
     try {
-      // Make PUT request
+      // Make PUT request to update the appointment with the provided interview data in the backend
       await axios.put(`/api/appointments/${id}`, { interview });
 
-      // Update the state with the new interview data
+      // Create a new appointment object by merging the existing appointment with the new interview data
       const appointment = {
         ...state.appointments[id],
         interview: { ...interview },
       };
 
-      // Create new appointments objct that includes the updated
-      // appointment object and set it as the new appointments state
+      // Create a new appointments object by merging the existing appointments with the updated appointment
       const appointments = {
         ...state.appointments,
         [id]: appointment,
       };
 
-      // Save updated state in a variable so updateSpots have access to it
+      // Create a new state object by merging the existing state with the updated appointments object
       const newState = { ...state, appointments };
 
-      // Update state with new appointments
-      dispatch({ type: SET_INTERVIEW, id, interview });
-
-      // Update the number of spots
+      // Dispatch an action with the updated state to update the application data in the store
+      // Update the days with updated spots
       dispatch({
         type: SET_APPLICATION_DATA,
         days: updateSpots(newState),
@@ -144,10 +141,13 @@ export default function useApplicationData() {
         interviewers: newState.interviewers,
       });
 
+      // Return true if the interview booking is successful
       return true;
     } catch (error) {
+      // Log erros occurred during the API call or dispatching the action
       console.log(error);
 
+      // Return false if the interview booking fails
       return false;
     }
   };
@@ -155,29 +155,26 @@ export default function useApplicationData() {
   // Delete interview
   const cancelInterview = async (id) => {
     try {
-      // Send a DELETE request to the server to remove the interview data
+      // Send a DELETE request to the server to remove the interview data associated with the given id
       await axios.delete(`/api/appointments/${id}`);
 
-      // Update the local state to set the interview data to null
+      // Create a new appointment object with the interview set to null
       const appointment = {
         ...state.appointments[id],
         interview: null,
       };
 
-      // Create new appointments objct that includes the updated
-      // appointment object and set it as the new appointments state
+      // Create a new appointments object by merging the existing appointments with the updated appointment (cancellation)
       const appointments = {
         ...state.appointments,
         [id]: appointment,
       };
 
-      // Save updated state in a variable so updateSpots have access to it
+      // Create a new state object by merging the existing state with the updated appointments object
       const newState = { ...state, appointments };
 
-      // Update state with new appointments
-      dispatch({ type: SET_INTERVIEW, id, interview: null });
-
-      // Update the number of spots
+      // Dispatch an action with the updated state to update the application data in the store
+      // Update the days with updated spots
       dispatch({
         type: SET_APPLICATION_DATA,
         days: updateSpots(newState),
@@ -185,10 +182,13 @@ export default function useApplicationData() {
         interviewers: newState.interviewers,
       });
 
+      // Return true if the interview cancellation is successful
       return true;
     } catch (error) {
+      // // Log erros occurred during the API call or dispatching the action
       console.log(error);
 
+      // Return false if the interview cancellation fails
       return false;
     }
   };
