@@ -63,22 +63,17 @@ describe("Application", () => {
 
 
   it("loads data, cancels an interview and increases the spots remaining for Monday by 1", async () => {
-    // 1. Render the Application.
-    const { container, debug } = render(<Application />);
+    const { container} = render(<Application />);
 
-    // 2. Wait until the text "Archie Cohen" is displayed.
     await waitForElement(() => getByText(container, "Archie Cohen"));
 
-    // Find the appointment for "Archie Cohen".
     const appointments = getAllByTestId(container, "appointment");
     const appointment = appointments.find((appt) =>
       queryByText(appt, "Archie Cohen")
     );
 
-    // 3. Click the "Delete" button on the booked appointment.
     fireEvent.click(queryByAltText(appointment, "Delete"));
 
-    // 4. Check that the confirmation message is shown.
     expect(
       getByText(
         appointment,
@@ -86,124 +81,107 @@ describe("Application", () => {
       )
     ).toBeInTheDocument();
 
-    // 5. Click the "Confirm" button on the confirmation.
     fireEvent.click(queryByText(appointment, "Confirm"));
 
-    // 6. Check that the element with the text "Deleting" is displayed.
     expect(getByText(appointment, "Deleting")).toBeInTheDocument();
 
-    // 7. Wait until the element with the "Add" button is displayed.
     await waitForElement(() => getByAltText(appointment, "Add"));
 
     expect(getByAltText(appointment, "Add"));
 
-    // 8. Check that the DayListItem with the text "Monday" also has the text "2 spots remaining".
     const day = getAllByTestId(container, "day").find((day) =>
       queryByText(day, "Monday")
     );
 
     expect(getByText(day, "2 spots remaining")).toBeInTheDocument();
-
-    debug();
   });
 
 
 
-  // it("loads data, edits an interview and keeps the spots remaining for Monday the same", async () => {
-  //   // 1. Render the Application.
-  //   const { container, debug } = render(<Application />);
+  it("loads data, edits an interview and keeps the spots remaining for Monday the same", async () => {
+    const { container } = render(<Application />);
 
-  //   // 2. Wait until the text "Archie Cohen" is displayed.
-  //   await waitForElement(() => getByText(container, "Lydia Miller-Jones"));
+    await waitForElement(() => getByText(container, "Archie Cohen"));
 
-  //   // Find the appointment for "Lydia Miller-Jones".
-  //   const appointments = getAllByTestId(container, "appointment");
-  //   const appointment = appointments.find((appt) =>
-  //     queryByText(appt, "Lydia Miller-Jones")
-  //   );
+    const appointments = getAllByTestId(container, "appointment");
+    const appointment = appointments.find((appt) =>
+      queryByText(appt, "Archie Cohen")
+    );
 
-  //   // 3. Click the "Edit" button on the booked appointment.
-  //   fireEvent.click(queryByAltText(appointment, "Edit"));
+    fireEvent.click(queryByAltText(appointment, "Edit"));
 
-  //   // 4. Edit student name
-  //   fireEvent.change(getByPlaceholderText(appointment, /Enter Student Name/i), {
-  //     target: { value: "Jackie" },
-  //   });
+    fireEvent.change(getByPlaceholderText(appointment, /Enter Student Name/i), {
+      target: { value: "Jackie Nacarate" },
+    });
 
-  //   // 5. Select interviewer
-  //   fireEvent.click(getByAltText(appointment, "Tori Malcolm"));
+    fireEvent.click(getByAltText(appointment, "Sylvia Palmer"));
 
-  //   // 6. Click the "Save" button on the confirmation.
-  //   fireEvent.click(queryByText(appointment, "Save"));
+    fireEvent.click(queryByText(appointment, "Save"));
 
-  //   // 7. Check that the element with the text "Saving" is displayed.
-  //   expect(getByText(appointment, "Saving")).toBeInTheDocument();
+    expect(getByText(appointment, "Saving")).toBeInTheDocument();
 
-  //   // 8. Wait until the element with the "Add" button is displayed.
-  //   await waitForElement(() => getByText(appointment, "Jackie"));
+    await waitForElement(() => getByText(appointment, "Jackie Nacarate"));
 
-  //   const day = getAllByTestId(container, "day").find((day) =>
-  //     queryByText(day, "Monday")
-  //   );
+    const day = getAllByTestId(container, "day").find((day) =>
+      queryByText(day, "Monday")
+    );
 
-  //   expect(queryByText(day, "1 spot remaining")).toBeInTheDocument();
-
-  //   // debug();
-  // });
+    expect(queryByText(day, "1 spot remaining")).toBeInTheDocument();
+  });
 
 
 
-  // it("shows the save error when failing to save an appointment", async () => {
-  //   axios.put.mockRejectedValueOnce(new Error("Failed to save appointment"));
+  it("shows the save error when failing to save an appointment", async () => {
+    axios.put.mockRejectedValueOnce(new Error("Failed to save appointment"));
 
-  //   const { container } = render(<Application />);
+    const { container } = render(<Application />);
 
-  //   await waitForElement(() => getByText(container, "Jackie"));
+    await waitForElement(() => getByText(container, "Archie Cohen"));
 
-  //   const appointments = getAllByTestId(container, "appointment");
-  //   const appointment = appointments.find((appt) =>
-  //     queryByText(appt, "Jackie")
-  //   );
+    const appointments = getAllByTestId(container, "appointment");
+    const appointment = appointments.find((appt) =>
+      queryByText(appt, "Archie Cohen")
+    );
 
-  //   fireEvent.click(queryByAltText(appointment, "Edit"));
+    fireEvent.click(queryByAltText(appointment, "Edit"));
 
-  //   fireEvent.change(getByPlaceholderText(appointment, /Enter Student Name/i), {
-  //     target: { value: "Anne Jones" },
-  //   });
+    fireEvent.change(getByPlaceholderText(appointment, /Enter Student Name/i), {
+      target: { value: "Anne Jones" },
+    });
 
-  //   fireEvent.click(getByAltText(appointment, "Sylvia Palmer"));
+    fireEvent.click(getByAltText(appointment, "Sylvia Palmer"));
 
-  //   fireEvent.click(queryByText(appointment, "Save"));
+    fireEvent.click(queryByText(appointment, "Save"));
 
-  //   await waitForElement(() =>
-  //     getByText(appointment, "Could not save the appointment.")
-  //   );
-  // });
+    await waitForElement(() =>
+      getByText(appointment, "Could not save the appointment.")
+    );
+  });
 
 
+  
+   it("shows the delete error when failing to delete an existing appointment", async () => {
+     axios.delete.mockRejectedValueOnce(
+       new Error("Failed to delete appointment")
+     );
 
-  //  it("shows the delete error when failing to delete an existing appointment", async () => {
-  //    axios.delete.mockRejectedValueOnce(
-  //      new Error("Failed to delete appointment")
-  //    );
+     const { container } = render(<Application />);
 
-  //    const { container } = render(<Application />);
+     await waitForElement(() => getByText(container, "Archie Cohen"));
 
-  //    await waitForElement(() => getByText(container, "Jackie"));
+     const appointments = getAllByTestId(container, "appointment");
+     const appointment = appointments.find((appt) =>
+       queryByText(appt, "Archie Cohen")
+     );
 
-  //    const appointments = getAllByTestId(container, "appointment");
-  //    const appointment = appointments.find((appt) =>
-  //      queryByText(appt, "Jackie")
-  //    );
+     fireEvent.click(queryByAltText(appointment, "Delete"));
 
-  //    fireEvent.click(queryByAltText(appointment, "Delete"));
+     expect(getByText(appointment, "Are you sure you'd like to delete this appointment?")).toBeInTheDocument();
 
-  //    expect(getByText(appointment, "Are you sure you'd like to delete this appointment?")).toBeInTheDocument();
+    fireEvent.click(queryByText(appointment, "Confirm"));
 
-  //   fireEvent.click(queryByText(appointment, "Confirm"));
-
-  //    await waitForElement(() =>
-  //      getByText(appointment, "Could not delete the appointment.")
-  //    );
-  //  });
+     await waitForElement(() =>
+       getByText(appointment, "Could not delete the appointment.")
+     );
+   });
 });
