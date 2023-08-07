@@ -14,11 +14,12 @@ export default function reducer(state, action) {
   }
 
   if (action.type === SET_INTERVIEW) {
-    const interview = action.interview;
+    const interview = action.interview ? action.interview : null;
 
-    const appointment = state.appointments[action.id];
-
-    appointment.interview = interview;
+    const appointment = {
+      ...state.appointments[action.id],
+      interview: { ...interview },
+    };
 
     const appointments = { ...state.appointments, [action.id]: appointment };
 
