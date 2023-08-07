@@ -1,6 +1,8 @@
 import { useReducer, useEffect, useRef } from "react";
 import axios from "axios";
 
+import updateSpots from "helpers/updateSpots";
+
 import reducer, {
   SET_DAY,
   SET_APPLICATION_DATA,
@@ -95,22 +97,6 @@ export default function useApplicationData() {
     });
   }, []);
 
-  // Update the number of spots for each day
-  const updateSpots = (state) => {
-    const updatedDays = state.days.map((day) => {
-      const spots = day.appointments.reduce((count, appointmentId) => {
-        if (!state.appointments[appointmentId].interview) {
-          return count + 1;
-        }
-        return count;
-      }, 0);
-
-      return { ...day, spots };
-    });
-
-    return updatedDays;
-  };
-
   // Book interview
   const bookInterview = async (id, interview) => {
     try {
@@ -131,6 +117,8 @@ export default function useApplicationData() {
 
       // Create a new state object by merging the existing state with the updated appointments object
       const newState = { ...state, appointments };
+
+      // dispatch({ type: SET_INTERVIEW, id, interview });
 
       // Dispatch an action with the updated state to update the application data in the store
       // Update the days with updated spots
@@ -172,6 +160,10 @@ export default function useApplicationData() {
 
       // Create a new state object by merging the existing state with the updated appointments object
       const newState = { ...state, appointments };
+
+      // dispatch({ type: SET_INTERVIEW, id });
+
+
 
       // Dispatch an action with the updated state to update the application data in the store
       // Update the days with updated spots
