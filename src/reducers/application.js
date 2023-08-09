@@ -1,4 +1,5 @@
-// Updates the state based on dispatched actions
+import updateSpots from "helpers/updateSpots";
+
 export default function reducer(state, action) {
   if (action.type === SET_DAY) {
     return { ...state, day: action.day };
@@ -14,18 +15,22 @@ export default function reducer(state, action) {
   }
 
   if (action.type === SET_INTERVIEW) {
-    const interview = action.interview ? action.interview : null;
-
     const appointment = {
       ...state.appointments[action.id],
-      interview: { ...interview },
+      interview: action.interview,
     };
 
-    const appointments = { ...state.appointments, [action.id]: appointment };
+    const appointments = {
+      ...state.appointments,
+      [action.id]: appointment,
+    };
+    
+    const days = updateSpots({ ...state, appointments });
 
     return {
       ...state,
       appointments,
+      days,
     };
   }
 
