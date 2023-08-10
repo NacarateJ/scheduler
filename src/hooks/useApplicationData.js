@@ -79,7 +79,7 @@ export default function useApplicationData() {
       // Close the WebSocket connection when the component is unmounted
       newSocket.close();
     };
-  }, [state]);
+  }, []);
 
   // Book interview
   const bookInterview = async (id, interview) => {
