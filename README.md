@@ -132,7 +132,13 @@ https://github.com/NacarateJ/scheduler/assets/114256348/b51375fc-58ab-4ca4-bb3c-
 
 <div/>
 
+<br>
+
+<div align="left">
+ 
 ## Jest Test Coverage Report
+
+</div>
 
 <div align="center">
 
@@ -140,7 +146,13 @@ https://github.com/NacarateJ/scheduler/assets/114256348/b51375fc-58ab-4ca4-bb3c-
 
 <div/>
 
+<br>
+
+<div align="left">
+
 ## Cypress Tests
+
+<br/>
 
 <div align="center">
 
@@ -148,7 +160,13 @@ https://github.com/NacarateJ/scheduler/assets/114256348/fc974d15-a991-4ba2-acfc-
 
 <div/>
 
+<br>
+
+<div align="left">
+
 ## Storybook Components Tests
+
+<div/>
 
 <div align="center">
 
