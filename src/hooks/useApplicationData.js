@@ -7,6 +7,13 @@ import reducer, {
   SET_INTERVIEW,
 } from "reducers/application";
 
+/**
+ * Custom hook for managing application data and interactions.
+ *
+ * This hook provides functions to manage application state and interactions related to the appointments and interviewers.
+ *
+ * @return {object} An object containing the application state and functions for managing it.
+ */
 export default function useApplicationData() {
   const [state, dispatch] = useReducer(reducer, {
     day: "Monday",
@@ -15,13 +22,19 @@ export default function useApplicationData() {
     interviewers: {},
   });
 
-  // Change selected day
+  /**
+   * Set the currently selected day.
+   *
+   * @param {string} day - The day to set as the currently selected day.
+   */
   const setDay = (day) => dispatch({ type: SET_DAY, day });
 
+  // APIs for retrieving data
   const daysAPI = "/api/days";
   const appointmentsAPI = "/api/appointments";
   const interviewersAPI = "/api/interviewers";
 
+  // Fetch initial data from APIs on component mount
   useEffect(() => {
     Promise.all([
       axios.get(daysAPI),
@@ -30,6 +43,7 @@ export default function useApplicationData() {
     ]).then((all) => {
       const [daysResponse, appointmentsResponse, interviewersResponse] = all;
 
+      // Update the application state with fetched data
       dispatch({
         type: SET_APPLICATION_DATA,
         days: daysResponse.data,
@@ -42,31 +56,29 @@ export default function useApplicationData() {
   // Ref to store the WebSocket instance
   const webSocketRef = useRef(null);
 
-  // Make a connection to the WebSocket server using the useEffect method
+  // Establish a WebSocket connection and set up event handlers
   useEffect(() => {
-    // Establish the WebSocket connection
     const newSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
 
     // Store the WebSocket instance in the ref
     webSocketRef.current = newSocket;
 
-    // Set up event handlers for WebSocket interactions
-    // Send message from client to server
+    // Event handler for WebSocket connection open
     newSocket.onopen = () => {
-      newSocket.send("ping");
+      newSocket.send("ping"); // Send a test message (from client to server)
     };
 
-    // Send message from server to client
+    // Event handler for incoming WebSocket messages
     newSocket.onmessage = (event) => {
       // Handle WebSocket message
       const data = JSON.parse(event.data);
 
-      console.log(`Message Received: ${data}`);
+      console.log(`Message Received: ${data}`); // Send message from server to client
 
       if (data.type === "SET_INTERVIEW") {
-        // Update the state with the new interview data received from the server
         const { id, interview } = data;
-   
+
+        // Update the state with new interview data from the server
         dispatch({
           type: SET_INTERVIEW,
           interview,
@@ -75,47 +87,56 @@ export default function useApplicationData() {
       }
     };
 
+    // Close the WebSocket connection when the component unmounts
     return () => {
-      // Close the WebSocket connection when the component is unmounted
       newSocket.close();
     };
   }, []);
 
-  // Book interview
+  /**
+   * Book an interview for a specific appointment.
+   *
+   * @param {number} id - The ID of the appointment to book.
+   * @param {object} interview - The interview object to associate with the appointment.
+   * @return {boolean} Returns true if the booking is successful, false otherwise.
+   */
   const bookInterview = async (id, interview) => {
     try {
       // Make PUT request to update the appointment with the provided interview data in the backend
       await axios.put(`/api/appointments/${id}`, { interview });
 
+      // Update the state with the booked interview
       dispatch({ type: SET_INTERVIEW, id, interview });
 
-      // Return true if the interview booking is successful
-      return true;
+      return true; // Booking successful
     } catch (error) {
       // Log erros occurred during the API call or dispatching the action
       console.log(error);
 
-      // Return false if the interview booking fails
-      return false;
+      return false; // Booking failed
     }
   };
 
-  // Delete interview
+  /**
+   * Cancel an existing interview for a specific appointment.
+   *
+   * @param {number} id - The ID of the appointment to cancel the interview for.
+   * @return {boolean} Returns true if the cancellation is successful, false otherwise.
+   */
   const cancelInterview = async (id) => {
     try {
       // Send a DELETE request to the server to remove the interview data associated with the given id
       await axios.delete(`/api/appointments/${id}`);
 
+      // Update the state to remove the interview
       dispatch({ type: SET_INTERVIEW, id, interview: null });
 
-      // Return true if the interview cancellation is successful
-      return true;
+      return true; // Cancellation successful
     } catch (error) {
-      // // Log erros occurred during the API call or dispatching the action
+      // Log erros occurred during the API call or dispatching the action
       console.log(error);
 
-      // Return false if the interview cancellation fails
-      return false;
+      return false; // Cancellation failed
     }
   };
 

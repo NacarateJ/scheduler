@@ -1,11 +1,22 @@
 import { useState } from "react";
 
+/**
+ * Custom hook for managing visual modes and history.
+ *
+ * @param {any} initial The initial mode value.
+ * @return {object} An object containing the current mode, transition function, and back function.
+ */
 export default function useVisualMode(initial) {
   const [mode, setMode] = useState(initial);
   const [history, setHistory] = useState([initial]);
 
+  /**
+   * Transition to a new visual mode.
+   *
+   * @param {any} newMode The new mode to transition to.
+   * @param {boolean} replace If true, replaces the current mode in history.
+   */
   const transition = (newMode, replace = false) => {
-    // If replace is true, update the history to replace the current mode
     if (replace) {
       setHistory((prevHistory) => {
         const newHistory = [...prevHistory];
@@ -16,10 +27,13 @@ export default function useVisualMode(initial) {
       // If replace is false, add the new mode to the history
       setHistory((prevHistory) => [...prevHistory, newMode]);
     }
-    // Set the mode to the new mode
+
     setMode(newMode);
   };
 
+  /**
+   * Move back to the previous visual mode in history.
+   */
   const back = () => {
     // Only allow going back if history has more than one element
     if (history.length > 1) {
@@ -35,6 +49,6 @@ export default function useVisualMode(initial) {
   return {
     mode,
     transition,
-    back
+    back,
   };
 };

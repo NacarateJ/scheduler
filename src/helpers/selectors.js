@@ -1,7 +1,10 @@
-/////////////////////////////////////////////////////////////////////////////////
-/// getAppointmentsForDay
-/////////////////////////////////////////////////////////////////////////////////
-
+/**
+ * Retrieves an array of appointments for a given day.
+ * 
+ * @param {Object} state The application state containing appointments and days data.
+ * @param {string} day The name of the day for which to retrieve appointments.
+ * @return {Array} An array of appointment objects for the specified day.
+ */
 export function getAppointmentsForDay(state, day) {
   // Find the object in the state.days arr that matches day name
   const selectedDay = state.days.find((d) => d.name === day);
@@ -12,15 +15,18 @@ export function getAppointmentsForDay(state, day) {
 
   // Retrieve the appointments array
   return selectedDay.appointments.map((appointmentId) => {
-    // The map method will create a new array containing the appointment objects for that day
+    
     return state.appointments[appointmentId];
   });
 }
 
-/////////////////////////////////////////////////////////////////////////////////
-/// getInterview
-/////////////////////////////////////////////////////////////////////////////////
-
+/**
+ * Retrieves the interview data along with interviewer's information if available.
+ *
+ * @param {Object} state The application state containing appointments, interviewers, and days data.
+ * @param {Object} interview The interview object containing student and interviewer information.
+ * @return {Object|null} An object containing interview data and interviewer's information, or null if no valid interview or interviewer found.
+ */
 export function getInterview(state, interview) {
   // Check if the interview is not null and contains a valid interviewer ID
   if (interview && interview.interviewer) {
@@ -30,7 +36,6 @@ export function getInterview(state, interview) {
     // Get the interviewer's information from the state
     const interviewer = state.interviewers[interviewerId];
 
-    // Return a new object (if interviewer exists) containing the interview data and interviewer's information
     if (interviewer) {
       return {
         student: interview.student,
@@ -43,14 +48,16 @@ export function getInterview(state, interview) {
     }
   }
  
-  // Return null if no interview is booked, interviewer data is missing, or the interview itself is null
   return null;
 }
 
-/////////////////////////////////////////////////////////////////////////////////
-/// getInterviewersForDay 
-/////////////////////////////////////////////////////////////////////////////////
-
+/**
+ * Retrieves an array of interviewers for a given day.
+ *
+ * @param {Object} state The application state containing interviewers and days data.
+ * @param {string} day The name of the day for which to retrieve interviewers.
+ * @return {Array} An array of interviewer objects for the specified day.
+ */
 export function getInterviewersForDay(state, day) {
   // Find the object in the state.days arr that matches day name
   const selectedDay = state.days.find((d) => d.name === day);
@@ -61,7 +68,7 @@ export function getInterviewersForDay(state, day) {
 
   // Retrieve the interviewers array
   return selectedDay.interviewers.map((interviewerId) => {
-    // The map method will create a new array containing the interviewers objects for that day
+    
     return state.interviewers[interviewerId];
   });
 }

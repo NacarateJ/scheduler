@@ -34,7 +34,6 @@ export default function Appointment({
 
   const { mode, transition, back } = useVisualMode(interview ? SHOW : EMPTY);
 
-  // Side effect to handle mode transition when interview prop changes
  useEffect(() => {
    if (interview && mode === EMPTY) {
      transition(SHOW);

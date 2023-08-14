@@ -1,5 +1,12 @@
 import updateSpots from "helpers/updateSpots";
 
+/**
+ * Reduces the application state based on the provided action.
+ *
+ * @param {object} state The current application state.
+ * @param {object} action The action object containing type and additional data.
+ * @return {object} The new application state after applying the action.
+ */
 export default function reducer(state, action) {
   if (action.type === SET_DAY) {
     return { ...state, day: action.day };
