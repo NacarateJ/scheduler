@@ -7,7 +7,7 @@ import { useState } from "react";
  * @return {object} An object containing the current mode, transition function, and back function.
  */
 export default function useVisualMode(initial) {
-  const [mode, setMode] = useState(initial);
+  // Maintain a history array to track mode transitions
   const [history, setHistory] = useState([initial]);
 
   /**
@@ -17,18 +17,13 @@ export default function useVisualMode(initial) {
    * @param {boolean} replace If true, replaces the current mode in history.
    */
   const transition = (newMode, replace = false) => {
-    if (replace) {
-      setHistory((prevHistory) => {
-        const newHistory = [...prevHistory];
-        newHistory[newHistory.length - 1] = newMode;
-        return newHistory;
-      });
-    } else {
-      // If replace is false, add the new mode to the history
-      setHistory((prevHistory) => [...prevHistory, newMode]);
-    }
-
-    setMode((prevMode) => newMode);
+    setHistory((prevHistory) => {
+      // Create a new history array based on the replace flag
+      const newHistory = replace
+        ? [...prevHistory.slice(0, -1), newMode]
+        : [...prevHistory, newMode];
+      return newHistory;
+    });
   };
 
   /**
@@ -37,14 +32,13 @@ export default function useVisualMode(initial) {
   const back = () => {
     // Only allow going back if history has more than one element
     if (history.length > 1) {
-      // Remove the last mode from the history array
-      const newHistory = history.slice(0, -1);
-      // Set the mode to the previous mode
-      setMode(newHistory[newHistory.length - 1]);
-      // Update the history state
-      setHistory(newHistory);
+      // Remove the last element from the history array
+      setHistory((prevHistory) => prevHistory.slice(0, -1));
     }
   };
+
+  // Extract the current mode from the last element of the history array
+  const mode = history[history.length - 1];
 
   return {
     mode,
