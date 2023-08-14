@@ -89,8 +89,9 @@ export default function Appointment({
       )}
       {mode === EDIT && (
         <Form
-          interviewers={interviewers}
           studentName={studentName}
+          interviewers={interviewers}
+          interviewerID={interview.interviewer.id}
           onSave={onSave}
           onCancel={back}
         />
