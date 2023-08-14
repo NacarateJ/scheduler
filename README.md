@@ -128,7 +128,7 @@ The scheduler client (`scheduler`) runs on port 8000, and the scheduler server (
 
 <div align="center">
 
-https://github.com/NacarateJ/scheduler/assets/114256348/b51375fc-58ab-4ca4-bb3c-7ad4ec4c4903
+https://github.com/NacarateJ/scheduler/assets/114256348/a7d95b0e-a7de-4435-86c6-28b5db5572be
 
 <div/>
 
@@ -170,7 +170,7 @@ https://github.com/NacarateJ/scheduler/assets/114256348/fc974d15-a991-4ba2-acfc-
 
 <div align="center">
 
-https://github.com/NacarateJ/scheduler/assets/114256348/7cdc8bf0-2463-4f7f-931d-326d2da249dd
+https://github.com/NacarateJ/scheduler/assets/114256348/244e3ac5-a068-44ab-b7b6-68dc58ecb953
 
 <div/>
 
