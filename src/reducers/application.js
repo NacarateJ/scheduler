@@ -8,9 +8,9 @@ import updateSpots from "helpers/updateSpots";
  * @return {object} The new application state after applying the action.
  */
 export default function reducer(state, action) {
-  // if (action.type === SET_DAY) {
-  //   return { ...state, day: action.day };
-  // }
+  if (action.type === SET_DAY) {
+    return { ...state, day: action.day };
+  }
 
   if (action.type === SET_APPLICATION_DATA) {
     return {
