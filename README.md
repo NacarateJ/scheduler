@@ -122,9 +122,28 @@ Follow the `README.md` instructions. This will involve a few steps, including:
 
 ## Running Both Servers
 
-The scheduler client (`scheduler`) runs on port 8000, and the scheduler server (`scheduler-api`) runs on port 8001. Both can be started by running `npm start` in the terminal. 
+The scheduler client (`scheduler`) runs on port 8000, and the scheduler server (`scheduler-api`) runs on port 8001. Both can be started by running `npm start` in the terminal.
+
+## Deployment
+
+### Deploying the Scheduler Client
+The Scheduler client is deployed using [Netlify](https://www.netlify.com/). Netlify automatically deploys the static client assets whenever changes are pushed to the production branch.
+
+### Deploying the Scheduler API
+The Scheduler API is deployed using [Railway.app](https://railway.app/) services. Railway manages the deployment process by handling server configuration. The Scheduler API is accessible through the deployed URL provided by Railway.
+
+### Continuous Integration
+[CircleCI](https://circleci.com/) is utilized to manage the continuous integration process for the project by monitoring changes to the master branch. Upon detecting changes, CircleCI builds the environment and runs tests.
+* If the tests fail, the build is considered broken and the team is informed by email.
+* If the tests pass, CircleCI pushes the master branch to a production branch, ensuring automated deployment.
+
 
 ## Final Product
+
+### Live App
+[Scheduler](https://int-scheduler.netlify.app/)
+
+## Video Demo
 
 <div align="center">
 
