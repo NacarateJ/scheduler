@@ -162,21 +162,15 @@ The Scheduler API is deployed using [Railway.app](https://railway.app/) services
 
 <div/>
 
-<br>
-
 <div align="left">
 
 ## Cypress Tests
-
-<br/>
 
 <div align="center">
 
 https://github.com/NacarateJ/scheduler/assets/114256348/fc974d15-a991-4ba2-acfc-728ebeb1f9fb
 
 <div/>
-
-<br>
 
 <div align="left">
 
