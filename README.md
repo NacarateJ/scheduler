@@ -2,6 +2,21 @@
 
 Interview Scheduler is a single-page application (SPA) that allows users to book technical interviews between students and mentors.
 
+<div align="center">
+
+https://github.com/NacarateJ/scheduler/assets/114256348/a7d95b0e-a7de-4435-86c6-28b5db5572be
+
+<div/>
+
+<div align="left">
+
+## Live Application
+The application is deployed on [Netlify](https://www.netlify.com/) (front-end) and [Railway.app](https://railway.app/) (back-end). It can be accessed at the following URL:
+
+[![📅 Scheduler](https://img.shields.io/badge/📅-Scheduler-222f3e)](https://int-scheduler.netlify.app/)
+
+Feel free to test out all the features and report any issues.
+
 ## Features
 
 ### Booking Interviews
@@ -136,24 +151,6 @@ The Scheduler API is deployed using [Railway.app](https://railway.app/) services
 [CircleCI](https://circleci.com/) is utilized to manage the continuous integration process for the project by monitoring changes to the master branch. Upon detecting changes, CircleCI builds the environment and runs tests.
 * If the tests fail, the build is considered broken and the team is informed by email.
 * If the tests pass, CircleCI pushes the master branch to a production branch, ensuring automated deployment.
-
-
-## Final Product
-
-### Live App
-[Scheduler](https://int-scheduler.netlify.app/)
-
-## Video Demo
-
-<div align="center">
-
-https://github.com/NacarateJ/scheduler/assets/114256348/a7d95b0e-a7de-4435-86c6-28b5db5572be
-
-<div/>
-
-<br>
-
-<div align="left">
  
 ## Jest Test Coverage Report
 
